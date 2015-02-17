@@ -15,17 +15,22 @@ for line in open("./data/DataSet.txt"):
     for word in line.strip().split(','):
         templine.append(word) 
     i = 0
-    for el in listOfFeatures:
-        car[el] = templine[i]
+
+    for field in listOfFeatures:
+        car[field] = templine[i]
         i = i + 1
     listofcars.append(car)
 
 
 
+def categorize(fields, data):
+    return "Lolol"
+
+print(categorize("", ""))
 
 
-#print(listOfFeatures) 
-#print(listofcars[0])
+# print("Features {0}".format(listOfFeatures)) 
+print("Example car {0}".format(listofcars[0]))
 
 """
 for el in listofcars:
@@ -33,6 +38,7 @@ for el in listofcars:
 """
 
 def getMin (inputdict,value):
+    print("getMin {0}".format(value))
     minloses = sys.maxsize
     miss = 0
     for el in inputdict:
@@ -44,16 +50,16 @@ def getMin (inputdict,value):
 
 
 
-mindict = {}
+# mindict = {}
 
-# Get Min Values
+# # Get Min Values
 for el in listOfFeatures:
     #For each continous value get the min
-    mindict[el] = getMin(listofcars, el) 
+    getMin(listofcars, el) #mindict[el] = 
 
 
 
-print(minloses)
+# print(minloses)
 
 """
 descriptions = []
