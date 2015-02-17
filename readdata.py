@@ -28,11 +28,21 @@ def main():
         fieldValues = getFieldsAsString(listofcars, field)
         if len(fieldValues) > 0:
             categoricalresults[field] = {
-                "raw": fieldValues
+                "raw": fieldValues,
+                "mode": getWordCounts(fieldValues) 
             };
         
 
     print(categoricalresults)
+
+def getWordCounts(collection):
+    results = {}
+    for word in collection:
+        if hasattr(results,word):
+            results[word] = results[word] + 1
+        else:
+            results[word] = 1
+    return results
 
 def getFieldsAsFloat(collection, field):
     results = []
