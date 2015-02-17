@@ -16,11 +16,35 @@ def main():
         print(el['width'])
     """
 
+    # struct = {
+    #     min: sys.maxsize,
+    #     max: sys.minsize,
+    #     std: undef
+    # }
+
+    results = {}
     # Get Min Values
-    for el in listOfFeatures:
+    for field in listOfFeatures:
+        continuousResult = {
+            "min": 0,
+            "max": 0,
+            "count":0,
+            "cardinality": 0,
+            "quart1": 0,
+            "quart4": 0,
+            "std":0
+        }
+
         #For each continous value get the min
-        if el in continuous:
-            getMin(listofcars, el) #mindict[el] = 
+        if field in continuous:
+            continuousResult['min'] = getMin(listofcars, field)  
+            continuousResult['max'] = getMax(listofcars, field)  
+            continuousResult['count'] = getCount(listofcars, field)  
+            continuousResult['miss'] = getMiss(listofcars, field)
+
+
+        results[field] = continuousResult
+        print("{0}:\t\t\t{1}".format(field, continuousResult))
 
 
 
@@ -40,6 +64,9 @@ continuous = ["normalized-losses",
                 "city-mpg",
                 "highway-mpg",
                 "price"]
+
+
+
 
 # Read feature names from file
 def readFeatures(filename):
@@ -77,18 +104,40 @@ def isfloat(value):
 #TODO : return min dont just print it
 #Returns the min value from a data set
 def getMin (inputdict,value):
-    print("getMin {0}".format(value))
-    minloses = sys.maxsize
+    currentMin = sys.maxsize
     miss = 0
     for el in inputdict:
         if el[value] is '?':
             miss = miss + 1
         else:
-            if minloses > float(el[value]):
-                minloses = float(el[value])
-    print(minloses)
+            if currentMin > float(el[value]):
+                currentMin = float(el[value])
+    return currentMin
 
+def getMax (inputdict,value):
+    currentMax = 0
+    miss = 0
+    for el in inputdict:
+        if el[value] is '?':
+            miss = miss + 1
+        else:
+            if currentMax < float(el[value]):
+                currentMax = float(el[value])
+    return currentMax
 
+def getMiss (inputdict,value):
+    miss = 0
+    for el in inputdict:
+        if el[value] is '?':
+            miss = miss + 1
+    return miss
+
+def getCount (inputdict,value):
+    count = 0
+    for el in inputdict:
+        if el[value] is not '?':
+            count = count + 1
+    return count
 
 main()
 
