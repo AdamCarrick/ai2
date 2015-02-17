@@ -4,6 +4,24 @@ import sys
 listofcars = []
 listOfFeatures = []
 
+# Continuous is a list of strings that represent fields that contain continuous data
+continuous = ["normalized-losses",
+                "wheel-base",
+                "ngth",
+                "width",
+                "height",
+                "curb-weight",
+                "engine-size",
+                "bore",
+                "stroke",
+                "compression-ratio",
+                "horsepower",
+                "peak-rpm",
+                "city-mpg",
+                "highway-mpg",
+                "price"]
+
+
 for line in open ("./data/featurenames.txt"):
     for word in line.strip().split(','):
         listOfFeatures.append(word)
@@ -21,12 +39,14 @@ for line in open("./data/DataSet.txt"):
         i = i + 1
     listofcars.append(car)
 
+def isfloat(value):
+  try:
+    float(value)
+    return True
+  except ValueError:
+    return False
 
-
-def categorize(fields, data):
-    return "Lolol"
-
-print(categorize("", ""))
+# print(categorize(listOfFeatures, listofcars))
 
 
 # print("Features {0}".format(listOfFeatures)) 
@@ -47,6 +67,7 @@ def getMin (inputdict,value):
         else:
             if minloses > float(el[value]):
                 minloses = float(el[value])
+    print(minloses)
 
 
 
@@ -55,7 +76,8 @@ def getMin (inputdict,value):
 # # Get Min Values
 for el in listOfFeatures:
     #For each continous value get the min
-    getMin(listofcars, el) #mindict[el] = 
+    if el in continuous:
+        getMin(listofcars, el) #mindict[el] = 
 
 
 
