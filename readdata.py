@@ -5,12 +5,12 @@ def main():
     listOfFeatures = readFeatures("./data/featurenames.txt")
     listofcars = readData("./data/DataSet.txt",listOfFeatures)
 
-    results = {}
+    continuousresults = {}
 
     for field in continuous:
         fieldValues = getFieldsAsFloat(listofcars, field)
         if len(fieldValues) > 0:
-            results[field] = {
+            continuousresults[field] = {
                 "min": min(fieldValues),
                 "max": max(fieldValues),
                 "count": len(fieldValues),
@@ -20,7 +20,19 @@ def main():
                 "std": stdev(fieldValues)
             };
 
-    print(results)
+
+    categoricalresults ={}
+
+    notcontinuous = set(listOfFeatures) - set(continuous)
+    for field in notcontinuous:
+        fieldValues = getFieldsAsString(listofcars, field)
+        if len(fieldValues) > 0:
+            categoricalresults[field] = {
+                "raw": fieldValues
+            };
+        
+
+    print(categoricalresults)
 
 def getFieldsAsFloat(collection, field):
     results = []
@@ -29,6 +41,15 @@ def getFieldsAsFloat(collection, field):
             results.append(float(car[field]))
         except:
             pass
+
+    return results
+
+def getFieldsAsString(collection, field):
+    results = []
+    for car in collection:
+        value = car[field]  
+        if value is not '?':
+            results.append(value)
 
     return results
 
@@ -77,6 +98,8 @@ def readData(filename,listOfFeatures):
             i = i + 1
         listofcars.append(car)
     return listofcars
+
+
 
 # def getCardinality(inputdict, field):
 #     cardinality =0
