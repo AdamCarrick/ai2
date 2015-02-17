@@ -1,8 +1,28 @@
 import sys
 
+def main():
+    listOfFeatures = readFeatures("./data/featurenames.txt")
+    listofcars = readData("./data/DataSet.txt",listOfFeatures)
 
-listofcars = []
-listOfFeatures = []
+
+    # print(categorize(listOfFeatures, listofcars))
+
+
+    # print("Features {0}".format(listOfFeatures)) 
+    print("Example car {0}".format(listofcars[0]))
+
+    """
+    for el in listofcars:
+        print(el['width'])
+    """
+
+    # Get Min Values
+    for el in listOfFeatures:
+        #For each continous value get the min
+        if el in continuous:
+            getMin(listofcars, el) #mindict[el] = 
+
+
 
 # Continuous is a list of strings that represent fields that contain continuous data
 continuous = ["normalized-losses",
@@ -21,24 +41,32 @@ continuous = ["normalized-losses",
                 "highway-mpg",
                 "price"]
 
+# Read feature names from file
+def readFeatures(filename):
+    fields = []
+    for line in open (filename):
+        for word in line.strip().split(','):
+            fields.append(word)
+    return fields
 
-for line in open ("./data/featurenames.txt"):
-    for word in line.strip().split(','):
-        listOfFeatures.append(word)
 
+#read in the data set
+def readData(filename,listOfFeatures):
+    listofcars = []
+    for line in open(filename):
+        car = {}
+        templine = []
+        for word in line.strip().split(','):
+            templine.append(word) 
+        i = 0
 
-for line in open("./data/DataSet.txt"):
-    car = {}
-    templine = []
-    for word in line.strip().split(','):
-        templine.append(word) 
-    i = 0
+        for field in listOfFeatures:
+            car[field] = templine[i]
+            i = i + 1
+        listofcars.append(car)
+    return listofcars
 
-    for field in listOfFeatures:
-        car[field] = templine[i]
-        i = i + 1
-    listofcars.append(car)
-
+#Check if a value is a float
 def isfloat(value):
   try:
     float(value)
@@ -46,17 +74,8 @@ def isfloat(value):
   except ValueError:
     return False
 
-# print(categorize(listOfFeatures, listofcars))
-
-
-# print("Features {0}".format(listOfFeatures)) 
-print("Example car {0}".format(listofcars[0]))
-
-"""
-for el in listofcars:
-    print(el['width'])
-"""
-
+#TODO : return min dont just print it
+#Returns the min value from a data set
 def getMin (inputdict,value):
     print("getMin {0}".format(value))
     minloses = sys.maxsize
@@ -71,13 +90,7 @@ def getMin (inputdict,value):
 
 
 
-# mindict = {}
-
-# # Get Min Values
-for el in listOfFeatures:
-    #For each continous value get the min
-    if el in continuous:
-        getMin(listofcars, el) #mindict[el] = 
+main()
 
 
 
