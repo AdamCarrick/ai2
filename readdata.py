@@ -1,6 +1,23 @@
 import sys
 from statistics import *
 
+# Continuous is a list of strings that represent fields that contain continuous data
+continuous = ["normalized-losses",
+                "wheel-base",
+                "ngth",
+                "width",
+                "height",
+                "curb-weight",
+                "engine-size",
+                "bore",
+                "stroke",
+                "compression-ratio",
+                "horsepower",
+                "peak-rpm",
+                "city-mpg",
+                "highway-mpg",
+                "price"]
+
 def main():
     listOfFeatures = readFeatures("./data/featurenames.txt")
     listofcars = readData("./data/DataSet.txt",listOfFeatures)
@@ -21,26 +38,32 @@ def main():
             };
 
 
-    categoricalresults ={}
+    carCounts ={}
+    fields = []
 
     notcontinuous = set(listOfFeatures) - set(continuous)
     for field in notcontinuous:
         fieldValues = getFieldsAsString(listofcars, field)
         if len(fieldValues) > 0:
-            categoricalresults[field] = {
-                "raw": fieldValues,
-                "mode": getWordCounts(fieldValues) 
+            carCounts[field] = {
+                # "raw": fieldValues,
+                "counts": getWordCounts(fieldValues) 
             };
+            fields.append(field)
+    
+    # print(carCounts)
+    mode = getMode(carCounts, fields)        
+    for key in mode:
+        print("{0} mode: {1} ({2}) mode2: {3} ({4})".format(key['field'], key['mode'], key['count'],key['mode2'], key['count2']))
         
 
-    print(categoricalresults)
-
 def getWordCounts(collection):
+    # print(collection)
     results = {}
     for word in collection:
-        if hasattr(results,word):
+        try:
             results[word] = results[word] + 1
-        else:
+        except:
             results[word] = 1
     return results
 
@@ -64,22 +87,7 @@ def getFieldsAsString(collection, field):
     return results
 
 
-# Continuous is a list of strings that represent fields that contain continuous data
-continuous = ["normalized-losses",
-                "wheel-base",
-                "ngth",
-                "width",
-                "height",
-                "curb-weight",
-                "engine-size",
-                "bore",
-                "stroke",
-                "compression-ratio",
-                "horsepower",
-                "peak-rpm",
-                "city-mpg",
-                "highway-mpg",
-                "price"]
+
 
 
 
@@ -109,7 +117,47 @@ def readData(filename,listOfFeatures):
         listofcars.append(car)
     return listofcars
 
+def getMode(carCounts,fields):
+    # print(fields) #['num-of-doors', 'aspiration', 'engine-location', 'length', 'fuel-type', 'symboling', 'num-of-cylinders', 'fuel-system', 'body-style', 'drive-wheels', 'engine-type', 'make']
+    # print(carCounts) 
+    
+    results = []
 
+    for field in fields:
+        collection = carCounts[field]
+        # print("{0}: {1}".format(field, collection['counts']))
+        counts = collection['counts']
+        # print(counts.keys())
+        # print(counts.keys)
+        keys = counts.keys()
+        currentMax = 0
+        previousMax = 0
+        modeValue = ''
+        modeValue2 = ''
+        for key in keys:
+            # print ("{0}: {1}".format(key, counts[key]))
+            value = int(counts[key])
+            if value > currentMax:
+                    previousMax = currentMax
+                    modeValue2 = modeValue
+                    currentMax = value
+                    modeValue = key
+                    
+
+                    # TODO: Save the previous one as well
+
+        # print("{0} mode: {1} ({2})".format(field, modeValue, currentMax))
+        singleResult = {
+                "field" : field,
+                "mode" : modeValue,
+                "count" : currentMax,
+                "mode2" : modeValue2,
+                "count2" : previousMax
+        }
+
+        print(singleResult)
+        results.append(singleResult)
+    return results
 
 # def getCardinality(inputdict, field):
 #     cardinality =0
